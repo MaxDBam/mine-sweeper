@@ -7,6 +7,10 @@ const SAD = '<img src="img/sad1.png"/>';
 const VICTORY = 'img src="img/sunglass1.png"/>';
 // const HEART =
 
+var gTime;
+var gSeconds = 0;
+var gMinutes = 0;
+
 // var gLives = 3;
 var gSize = 4;
 var gMines = 2;
@@ -80,10 +84,16 @@ function renderBoard(board) {
     elBoard.innerHTML = strHTML;
 }
 
+function renderTime() {
+    var strHTML = '';
+    strHTML += '<div class="clock"></div>';
+    var elBoard = document.querySelector('.clock-container');
+    elBoard.innerHTML = strHTML;
+}
 
 function getFirstClick(i, j) {
     setMinesNegsCount(i, j);
-
+    gTime = setInterval(startTime, 1000);
     gFirstClick = false;
 }
 
@@ -241,16 +251,11 @@ function getLevel(elLevel) {
 
 
 function init() {
-
+    clearInterval(gTime);
+    renderTime();
 
     renderMinesCount();
     renderBoard(gBoard);
-
-
-
-
-
-
 
 }
 
@@ -295,12 +300,23 @@ function checkVictory() {
 
         }
     }
-    // clearInterval(gTime);
+    clearInterval(gTime);
     document.querySelector('.btn-play').innerHTML = VICTORY;
     return true;
 }
 
+function startTime() {
+    gSeconds++;
+    if (gSeconds === 60) {
+        gSeconds = 0;
+        gMinutes++;
+    }
+    if (gSeconds < 10) {
+        gSeconds = '0' + gSeconds;
+    };
 
+    document.querySelector('.clock').innerHTML = gMinutes + ':' + gSeconds;
+}
 
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
