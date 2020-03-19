@@ -261,6 +261,7 @@ function init() {
 
 
 function startPlay() {
+    clearInterval(gTime);
     gBoard = [];
     gBoard = buildBoard();
 
@@ -300,8 +301,8 @@ function checkVictory() {
 
         }
     }
-    clearInterval(gTime);
     document.querySelector('.btn-play').innerHTML = VICTORY;
+    clearInterval(gTime);
     return true;
 }
 
