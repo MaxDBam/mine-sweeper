@@ -268,6 +268,8 @@ function startPlay() {
 
     gFlagsCount = gMines;
     gFirstClick = true;
+    gSeconds = 0;
+    gMinutes = 0;
     document.querySelector('.play-btn').innerHTML = '🙂';
 
     init();
@@ -284,7 +286,7 @@ function gameOver(isTrue) {;
                 document.querySelector('.play-btn').innerHTML = '😟';
             }
         }
-
+        clearInterval(gTime);
     }
 
 
