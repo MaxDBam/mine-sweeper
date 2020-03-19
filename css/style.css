@@ -1,0 +1,79 @@
+body {
+    background-color: #8c99928c;
+    color: black;
+    text-align: center
+}
+
+.cell {
+    width: 30px;
+    height: 30px;
+    text-align: center
+}
+
+.shown {
+    background-color: lightslategrey;
+}
+
+.body {
+    display: flex;
+}
+
+.play-btn {
+    width: 43px;
+    height: 37px;
+    cursor: pointer;
+}
+
+.start {
+    margin: 20px 30px;
+}
+
+form {
+    margin-top: 16px;
+}
+
+.game {
+    margin: auto;
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-around;
+}
+
+.board {
+    border: 1px;
+    margin: auto;
+}
+
+img {
+    width: 30px;
+    height: 30px;
+}
+
+td {
+    background-color: #aaa9ad;
+    text-align: center;
+    width: 30px;
+    height: 30px;
+}
+
+table {
+    border: 1px;
+    color: black;
+}
+
+h4 {
+    margin: 0 10px;
+}
+
+.mines-container,
+.clock-container {
+    display: flex;
+    width: 35px;
+    height: 35px;
+    border: 1px solid;
+    border-radius: 5px;
+    align-items: center;
+    justify-content: center;
+}
