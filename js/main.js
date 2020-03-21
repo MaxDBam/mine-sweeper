@@ -6,7 +6,7 @@ const HAPPY = '<img src="img/smile1.png"/>';
 const SAD = '<img src="img/sad1.png"/>';
 const VICTORY = 'img src="img/sunglass1.png"/>';
 // const HEART =
-
+var gSmileys = [HAPPY, SAD, VICTORY];
 var gTime;
 var gSeconds = 0;
 var gMinutes = 0;
@@ -124,7 +124,7 @@ function cellClicked(elCell, event) {
 
             gameOver(true);
         }
-        gameOver(checkVictory());
+        checkVictory();
     }
     renderBoard(gBoard);
 }
@@ -270,7 +270,7 @@ function startPlay() {
     gFirstClick = true;
     gSeconds = 0;
     gMinutes = 0;
-    document.querySelector('.play-btn').innerHTML = '🙂';
+    document.querySelector('.play-btn').innerHTML = gSmileys[0];
 
     init();
 
@@ -283,7 +283,7 @@ function gameOver(isTrue) {;
         for (var i = 0; i < gBoard.length; i++) {
             for (var j = 0; j < gBoard[0].length; j++) {
                 if (gBoard[i][j].mine === true) gBoard[i][j].type = SHOW;
-                document.querySelector('.play-btn').innerHTML = '😟';
+                document.querySelector('.play-btn').innerHTML = gSmileys[1];
             }
         }
         clearInterval(gTime);
@@ -303,9 +303,13 @@ function checkVictory() {
 
         }
     }
-    document.querySelector('.btn-play').innerHTML = VICTORY;
-    clearInterval(gTime);
-    return true;
+    var smiley = document.querySelector('.btn-play')
+    if (smiley.innerHTML === gSmileys[0]) {
+        clearInterval(gTime);
+        document.querySelector('.btn-play').img.src = "sunglass1.png";
+
+    }
+
 }
 
 function startTime() {

@@ -9,10 +9,10 @@
 </head>
 
 <body onload="init()">
-    <h1>Mine Sweeper</h1>
+    <h1 class="header-one"><span>Mine Sweeper</span></h1>
 
     <div class="start">
-        <h4>choose your level:</h4>
+        <h4>Please choose your desired level:</h4>
         <form class="form-levels">
             <input type="button" onclick="getLevel(this)" name="level" id="1" value="Beginner">
             <input type="button" onclick="getLevel(this)" name="level" id="2" value="Medium">
@@ -23,13 +23,15 @@
 
         <div class="game">
             <div class="game-header">
-                <div class="play-btn" onclick="startPlay()">🙂</div>
+                <div><button class="play-btn" onclick="startPlay()"><img src="img/smile1.png" alt="smiley"></button></div>
                 <div class="mines-container"></div>
                 <div class="clock-container"></div>
             </div>
+
             <table>
                 <tbody class="board"></tbody>
             </table>
+
         </div>
     </div>
     <script src="js/main.js"></script>
