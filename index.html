@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/main.css">
+    <title>Minesweeper</title>
+</head>
+<body onload="initGame(gLevel[0])">
+    <h1>Minesweeper</h1>
+    <div class="level-btns">
+        <button onclick="initGame(gLevel[0])">Beginner</button>
+        <button onclick="initGame(gLevel[1])">Medium</button>
+        <button onclick="initGame(gLevel[2])">Expert</button>
+    </div>
+    <div class="game-features">
+        <span class="hints" onclick="gameHints()"></span>
+        <span class="lives"></span>
+        <p class="hint-modal">You can click any closed cell for a hint</p>
+    </div>
+    <div class="game-info">
+        <span class="flags-counter"></span>
+        <button class="play-again-btn" onclick="initGame(gChosenLevel)">🙂</button>
+        <span class="timer"></span>
+    </div>
+    <table class="board"></table>
+    <script src="js/main.js"></script>
+</body>
+</html>

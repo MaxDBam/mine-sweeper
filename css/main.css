@@ -1,0 +1,88 @@
+body {
+    background-image: url(/img/minewallp.jpg);
+    background-color: rgba(255, 255, 255, 0.3);
+    background-blend-mode: lighten;
+}
+
+h1 {
+    text-align: center;
+}
+
+.level-btns {
+    text-align: center;
+    margin: auto;
+}
+
+.game-features {
+    margin-top: 2rem;
+    text-align: center;
+    height: 4rem;
+}
+
+.hints {
+    cursor: pointer;
+    width: 50px;
+    padding: 0.5rem;
+}
+
+.lives {
+    padding: 0.5rem;
+}
+
+.hint-modal {
+    display: none;
+    text-align: center;
+}
+
+.game-info {
+    text-align: center;
+}
+
+.flags-counter {
+    padding: 1.2rem;
+}
+
+.timer {
+    padding: 1.2rem;
+    text-align: center;
+}
+
+.play-again-btn {
+    
+    cursor: pointer;
+    /* text-align: center; */
+    width: 35px;
+}
+
+.board {
+    text-align: center;
+    margin: 40px auto;
+    background-color: silver;
+}
+
+td {
+    cursor: pointer;
+    width: 25px;
+    height: 25px;
+    /* visibility: hidden; */
+    /* z-index: -1; */
+}
+
+.closed-cell {
+    /* background-position: 0 30px; */
+    background-color: teal;
+    content: '🟦';
+    /* background-image: url(https://minesweeper.online/img/skins/hd/closed.svg?v=2) no-repeat; */
+    /* z-index: -1; */
+    /* contain: ; */
+}
+
+.opened-cell {
+    background-color: silver;
+    /* visibility: visible; */
+    /* z-index: 1; */
+}
+
+.opened-cell:hover {
+    cursor: auto;
+}
