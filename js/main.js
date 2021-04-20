@@ -233,7 +233,6 @@ function cellMarked(elCell, i, j) {
 
         }
     }
-    console.log(elCell);
 }
 
 function checkGameOver(result) {
