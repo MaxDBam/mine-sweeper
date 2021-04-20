@@ -42,10 +42,6 @@ var elHintModal = document.querySelector('.hint-modal');
 document.querySelector('.timer').innerText = gGame.secsPassed;
 
 var gTimer;
-//  = setInterval(function () {
-//     gGame.secsPassed++;
-// }, 1000);
-// elTime.innerText = gGame.secsPassed;
 
 function initGame(level) {
     document.querySelector('.play-again-btn').innerText = '🙂';
@@ -84,7 +80,6 @@ function buildBoard(level) {
             };
         }
     }
-
     return board;
 }
 
@@ -149,10 +144,7 @@ function cellClicked(elCell, i, j) {
             }, 1000);
             // setTimeout(function () {
             for (var k = 0; k < gChosenLevel.MINES; k++) {
-                var placeMine = possibleMinePlacing(i, j)[getRandomInt(0, possibleMinePlacing(i, j).length)];
-                // if (i === placeMine.i && j === placeMine.j) {
-                //     continue;
-                // } else
+                var placeMine = possibleMinePlacing(i, j)[getRandomInt(0, possibleMinePlacing(i, j).length)];          
                 if (gBoard[placeMine.i][placeMine.j].isMine === true) {
                     k--;
                 } else {
@@ -160,13 +152,9 @@ function cellClicked(elCell, i, j) {
                     console.log(placeMine.i, placeMine.j);
                 }
             }
-            // console.table(gBoard);
             setMinesNegsCount(gBoard);
-            // }, 10);
-
         }
     }
-
     gMoves++;
 
     var shownCell = (gBoard[i][j].isMine) ? MINE : gBoard[i][j].minesAroundCount;
@@ -208,20 +196,13 @@ function possibleMinePlacing(coordI, coordJ) {
                     i: m,
                     j: n
                 });
-            }
-            //         for (var k = i - 1; k <= i + 1; k++) {
-            //             for (var l = j - 1; j <= j + 1; l++) {
-            //                 continue;
-            //     }
-            // }
-
+            }         
         }
     }
     return placesToPutMinesIn;
 }
 
 window.addEventListener('contextmenu',function (e) {
-
     e.preventDefault();
 }, false);
 
@@ -241,10 +222,7 @@ function cellMarked(elCell, i, j) {
             document.querySelector('.flags-counter').innerText = --gFlagsCount;
             console.log(gFlagsCount);
             checkGameOver('win');
-        }
-        // } else {
-            // return;
-        // }
+        }     
     } else {
         if (gFlagsCount === gChosenLevel.MINES) {
             return;
@@ -255,12 +233,10 @@ function cellMarked(elCell, i, j) {
 
         }
     }
-
     console.log(elCell);
 }
 
 function checkGameOver(result) {
-    clearInterval(gTimer);
     if (result === 'lose') {
         document.querySelector('.play-again-btn').innerText = '💀'
         for (var i = 0; i < gBoard.length; i++) {
@@ -273,9 +249,11 @@ function checkGameOver(result) {
             }
         } 
         gGame.isOn = false;
+        clearInterval(gTimer);
     } else if ( result === 'win' && gGame.shownCount + gGame.markedCount === ((gChosenLevel.SIZE) ** 2 - gChosenLevel.MINES) || gGame.shownCount === (gChosenLevel.SIZE ** 2)) {
         document.querySelector('.play-again-btn').innerText = '😎';
         gGame.isOn = false;
+        clearInterval(gTimer);
     }
 }
 
@@ -286,7 +264,6 @@ function expandShown(board, elCell, i, j) {
             for (var l = j - 1; l <= j + 1; l++) {
                 if (l < 0 || l >= board[i].length) continue;
                 if (board[k][l].minesAroundCount >= 0 && !board[k][l].isMine) {
-
                     if (!board[k][l].isShown && !board[k][l].isMarked) {
                         board[k][l].isShown = true;
                         gGame.shownCount++;
@@ -312,8 +289,6 @@ function expandShown(board, elCell, i, j) {
                 }
                 var shownCell = (board[m][n].isMine) ? MINE : board[m][n].minesAroundCount;
                 renderCell(m, n, shownCell);
-
-
             }
         }
         setTimeout(function () {
@@ -324,7 +299,6 @@ function expandShown(board, elCell, i, j) {
                     }
                 }
             }
-
             gClickedHint = false;
             elHintModal.style.display = 'none';
         }, 1000)
