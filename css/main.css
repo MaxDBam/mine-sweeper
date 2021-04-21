@@ -1,5 +1,5 @@
 body {
-    background-image: url(https://maxdbam.github.io/minesweeper/img/minewallp.jpg);
+    background-image: url(../img/minewallp.jpg);
     background-color: rgba(255, 255, 255, 0.3);
     background-blend-mode: lighten;
 }
@@ -29,6 +29,14 @@ h1 {
     padding: 0.5rem;
 }
 
+.heart-img {
+    width: 25px;
+}
+
+.hint-img {
+    width: 25px;
+}
+
 .hint-modal {
     display: none;
     text-align: center;
@@ -48,10 +56,8 @@ h1 {
 }
 
 .play-again-btn {
-    
     cursor: pointer;
-    /* text-align: center; */
-    width: 35px;
+    width: 26px;
 }
 
 .board {
@@ -64,25 +70,22 @@ td {
     cursor: pointer;
     width: 25px;
     height: 25px;
-    /* visibility: hidden; */
-    /* z-index: -1; */
 }
 
 .closed-cell {
-    /* background-position: 0 30px; */
     background-color: teal;
     content: '🟦';
-    /* background-image: url(https://minesweeper.online/img/skins/hd/closed.svg?v=2) no-repeat; */
-    /* z-index: -1; */
-    /* contain: ; */
+   
 }
 
 .opened-cell {
     background-color: silver;
-    /* visibility: visible; */
-    /* z-index: 1; */
 }
 
 .opened-cell:hover {
     cursor: auto;
+}
+
+.flag-mine-imgs {
+    width: 20px;
 }
