@@ -300,10 +300,11 @@ function expandShown(board, elCell, i, j) {
                 var shownCell = (board[m][n].isMine) ? '<img class="flag-mine-imgs" src="img/mine.png" alt="mine"/>' : board[m][n].minesAroundCount;
                 if (board[m][n].isMine) {
                     renderCell(m, n, shownCell);
-                } else {
+                } else if (!board[m][n].isMine && shownCell > 0) {
                     renderCell(m, n, shownCell);
+                } else {
+                    renderCell(m, n, '');
                 }
-
             }
         }
         setTimeout(function () {
