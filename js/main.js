@@ -263,6 +263,8 @@ function checkGameOver(result) {
         document.querySelector('.play-again-btn').src = 'img/sunglasses.png';
         gGame.isOn = false;
         clearInterval(gTimer);
+        keepingBestScore();
+
     }
 }
 
