@@ -89,3 +89,25 @@ td {
 .flag-mine-imgs {
     width: 20px;
 }
+
+.scores {
+    text-align: center;
+    margin: auto auto;
+    width: 22rem;
+}
+
+.level-tab {
+    background-color: silver;
+}
+
+.levels-header, .level-tab {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.score-info, td {
+    background-color: silver;
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-align: left;
+}
