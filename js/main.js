@@ -27,8 +27,6 @@ var gChosenLevel;
 var gFirstClick = false;
 var gMoves;
 
-var gHints = '💡💡💡';
-var gLives;
 var mineExplosionAudio = new Audio('mixkit-sea-mine-explosion-1184.wav');
 var gNumOfHintsUsed;
 var gClickedHint = false;
@@ -39,10 +37,6 @@ var elHintModal = document.querySelector('.hint-modal');
 document.querySelector('.timer').innerText = gGame.secsPassed;
 
 var gTimer;
-//  = setInterval(function () {
-//     gGame.secsPassed++;
-// }, 1000);
-// elTime.innerText = gGame.secsPassed;
 
 function initGame(level) {
     document.querySelector('.play-again-btn').src = 'img/happy.png';
@@ -50,7 +44,6 @@ function initGame(level) {
     gNumOfHintsUsed = 0;
     gGame.shownCount = 0;
     gGame.secsPassed = 0;
-    gHints = '💡💡💡';
     document.querySelector('.lives').innerHTML = '<img src="img/heart.png" alt="heart image" class="heart-img"/><img src="img/heart.png" alt="heart image" class="heart-img"/><img src="img/heart.png" alt="heart image" class="heart-img"/>';
     document.querySelector('.hints').innerHTML = '<img src="img/hint.png" alt="hint image" class="hint-img"/><img src="img/hint.png" alt="hint image" class="hint-img"/><img src="img/hint.png" alt="hint image" class="hint-img"/>';
     document.querySelector('.timer').innerText = gGame.secsPassed;
@@ -63,6 +56,17 @@ function initGame(level) {
     document.querySelector('.flags-counter').innerText = gFlagsCount;
     gBoard = buildBoard(level);
     renderBoard(gBoard);
+    if (localStorage.getItem('BestTimeBeginner') !== null) {
+        document.querySelector('.beginner-score').innerText = window.localStorage.getItem('PlayersNameBeginner') + ' ' + window.localStorage.getItem('BestTimeBeginner');
+    }
+
+    if (localStorage.getItem('BestTimeMedium') !== null) {
+        document.querySelector('.medium-score').innerText = window.localStorage.getItem('PlayersNameMedium') + ' ' + window.localStorage.getItem('BestTimeMedium');
+    }
+
+    if (localStorage.getItem('BestTimeExpert') !== null) {
+        document.querySelector('.expert-score').innerText = window.localStorage.getItem('PlayersNameExpert') + ' ' + window.localStorage.getItem('BestTimeExpert');
+    }
 }
 
 function buildBoard(level) {
@@ -375,6 +379,71 @@ function renderCellsAfterUsingHint(i, j) {
         elCell.innerText = '';
         elCell.classList.add('closed-cell');
     }
+}
+
+function keepingBestScore() {
+    var playerName;
+    if (gChosenLevel.SIZE === 4 && gChosenLevel.MINES === 2 && localStorage.getItem('BestTimeBeginner') === null) {
+        playerName = prompt('Please enter a name to be shown on the score list');
+        if (!playerName) {
+            window.localStorage.setItem('PlayersNameBeginner', 'player');
+        } else {
+            window.localStorage.setItem('PlayersNameBeginner', playerName);
+        }
+        window.localStorage.setItem('BestTimeBeginner', gGame.secsPassed);
+        document.querySelector('.beginner-score').innerText = window.localStorage.getItem('PlayersNameBeginner') + ' ' + window.localStorage.getItem('BestTimeBeginner');
+
+    } else if (gChosenLevel.SIZE === 4 && gChosenLevel.MINES === 2 && gGame.secsPassed < +localStorage.getItem('BestTimeBeginner')) {
+        playerName = prompt('Please enter a name to be shown on the score list');
+        if (!playerName) {
+            window.localStorage.setItem('PlayersNameBeginner', 'player');
+        } else {
+            window.localStorage.setItem('PlayersNameBeginner', playerName);
+        }
+        window.localStorage.setItem('BestTimeBeginner', gGame.secsPassed);
+        document.querySelector('.beginner-score').innerText = window.localStorage.getItem('PlayersNameBeginner') + ' ' + window.localStorage.getItem('BestTimeBeginner');
+    }
+
+    if (gChosenLevel.SIZE === 8 && gChosenLevel.MINES === 12 && localStorage.getItem('BestTimeMedium') === null) {
+        playerName = prompt('Please enter a name to be shown on the score list');
+        if (!playerName) {
+            window.localStorage.setItem('PlayersNameMedium', 'player');
+        } else {
+            window.localStorage.setItem('PlayersNameMedium', playerName);
+        }
+        window.localStorage.setItem('BestTimeMedium', gGame.secsPassed);
+        document.querySelector('.medium-score').innerText = window.localStorage.getItem('PlayersNameMedium') + ' ' + window.localStorage.getItem('BestTimeMedium');
+    } else if (gChosenLevel.SIZE === 8 && gChosenLevel.MINES === 12 && gGame.secsPassed < +localStorage.getItem('BestTimeMedium')) {
+        playerName = prompt('Please enter a name to be shown on the score list');
+        if (!playerName) {
+            window.localStorage.setItem('PlayersNameMedium', 'player');
+        } else {
+            window.localStorage.setItem('PlayersNameMedium', playerName);
+        }
+        window.localStorage.setItem('BestTimeMedium', gGame.secsPassed);
+        document.querySelector('.medium-score').innerText = window.localStorage.getItem('PlayersNameMedium') + ' ' + window.localStorage.getItem('BestTimeMedium');
+    }
+
+    if (gChosenLevel.SIZE === 12 && gChosenLevel.MINES === 30 && localStorage.getItem('BestTimeExpert') === null) {
+        playerName = prompt('Please enter a name to be shown on the score list');
+        if (!playerName) {
+            window.localStorage.setItem('PlayersNameExpert', 'player');
+        } else {
+            window.localStorage.setItem('PlayersNameExpert', playerName);
+        }
+        window.localStorage.setItem('BestTimeExpert', gGame.secsPassed);
+        document.querySelector('.expert-score').innerText = window.localStorage.getItem('PlayersNameExpert') + ' ' + window.localStorage.getItem('BestTimeExpert');
+    } else if (gChosenLevel.SIZE === 12 && gChosenLevel.MINES === 30 && gGame.secsPassed < +localStorage.getItem('BestTimeExpert')) {
+        playerName = prompt('Please enter a name to be shown on the score list');
+        if (!playerName) {
+            window.localStorage.setItem('PlayersNameExpert', 'player');
+        } else {
+            window.localStorage.setItem('PlayersNameExpert', playerName);
+        }
+        window.localStorage.setItem('BestTimeExpert', gGame.secsPassed);
+        document.querySelector('.expert-score').innerText = window.localStorage.getItem('PlayersNameExpert') + ' ' + window.localStorage.getItem('BestTimeExpert');
+    }
+
 }
 
 function getRandomInt(min, max) {
