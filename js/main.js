@@ -33,8 +33,12 @@ var gClickedHint = false;
 var gClickedOnAMine;
 var gFlagsCount;
 
+
 var elHintModal = document.querySelector('.hint-modal');
 document.querySelector('.timer').innerText = gGame.secsPassed;
+var gBestBeginnerScore = document.querySelector('.beginner-score');
+var gBestMediumScore = document.querySelector('.medium-score');
+var gBestExpertScore = document.querySelector('.expert-score');
 
 var gTimer;
 
@@ -125,7 +129,7 @@ function renderBoard(board) {
 
 function cellClicked(elCell, i, j) {
     var img = document.querySelector('.play-again-btn');
-    if (img.getAttribute('src') === 'img/happy.png'){
+    if (img.getAttribute('src') === 'img/happy.png') {
         gGame.isOn = true;
 
     } else return;
@@ -138,10 +142,7 @@ function cellClicked(elCell, i, j) {
     if (gGame.isOn) {
         // Need to take care of this in a better way
         if (gMoves === 0) {
-            gTimer = setInterval(function () {
-                gGame.secsPassed++;
-                document.querySelector('.timer').innerText = gGame.secsPassed;
-            }, 1000);
+            gamerTimer();
             for (var k = 0; k < gChosenLevel.MINES; k++) {
                 var placeMine = possibleMinePlacing(i, j)[getRandomInt(0, possibleMinePlacing(i, j).length)];
                 // if (i === placeMine.i && j === placeMine.j) {
@@ -199,13 +200,13 @@ function possibleMinePlacing(coordI, coordJ) {
                     i: m,
                     j: n
                 });
-            
+            }
         }
     }
     return placesToPutMinesIn;
 }
 
-window.addEventListener('contextmenu',function (e) {
+window.addEventListener('contextmenu', function (e) {
 
     e.preventDefault();
 }, false);
@@ -216,7 +217,7 @@ function cellMarked(elCell, i, j) {
     }
     if (gBoard[i][j].isShown) {
         return;
-    } 
+    }
     if (!gBoard[i][j].isMarked) {
         if (gFlagsCount === 0) {
             return;
@@ -226,7 +227,7 @@ function cellMarked(elCell, i, j) {
             document.querySelector('.flags-counter').innerText = --gFlagsCount;
             checkGameOver('win');
         }
-       
+
     } else {
         if (gFlagsCount === gChosenLevel.MINES) {
             return;
@@ -250,15 +251,14 @@ function checkGameOver(result) {
                     renderCell(i, j, '<img class="flag-mine-imgs" src="img/mine.png" alt="mine"/>');
                 }
             }
-        } 
+        }
         gGame.isOn = false;
         clearInterval(gTimer);
-    } else if ( result === 'win' && gGame.shownCount + gGame.markedCount === ((gChosenLevel.SIZE) ** 2 - gChosenLevel.MINES) || gGame.shownCount === (gChosenLevel.SIZE ** 2)) {
+    } else if (result === 'win' && gGame.shownCount + gGame.markedCount === ((gChosenLevel.SIZE) ** 2 - gChosenLevel.MINES) || gGame.shownCount === (gChosenLevel.SIZE ** 2)) {
         document.querySelector('.play-again-btn').src = 'img/sunglasses.png';
         gGame.isOn = false;
         clearInterval(gTimer);
         keepingBestScore();
-
     }
 }
 
@@ -300,24 +300,22 @@ function gameHints() {
     if (!gGame.isOn) {
         return;
     }
-    if (gClickedHint) {    
+    if (gClickedHint) {
         return;
-    } 
+    }
     gNumOfHintsUsed++;
     gClickedHint = true;
     if (gNumOfHintsUsed > 2) {
         elHintImgs.style.display = 'none';
-        // return;
-    } 
+    }
     elHintModal.style.display = 'block';
-    
+
     if (gNumOfHintsUsed > 0) {
-        // document.querySelector('.hints').style.width = '33px';
         elHintImgs.removeChild(elHintImgs.childNodes[0]);
         if (gNumOfHintsUsed === 3 && !gClickedHint) elHintModal.style.display = 'hidden';
-    } 
+    }
 }
-    
+
 function expandCellsAfterUsingAHint(board, coordI, coordJ) {
     for (var m = coordI - 1; m <= coordI + 1; m++) {
         if (m < 0 || m >= board.length) continue;
@@ -350,7 +348,8 @@ function expandCellsAfterUsingAHint(board, coordI, coordJ) {
         elHintModal.style.display = 'none';
     }, 1000)
 }
-    
+
+
 function gameLivesLeft() {
     gClickedOnAMine++;
     var elHeartImgs = document.querySelector('.lives');
@@ -360,6 +359,10 @@ function gameLivesLeft() {
 }
 
 function gamerTimer() {
+    gTimer = setInterval(function () {
+        gGame.secsPassed++;
+        document.querySelector('.timer').innerText = gGame.secsPassed;
+    }, 1000);
 }
 
 function renderCell(i, j, value) {
