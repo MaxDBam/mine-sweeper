@@ -199,13 +199,7 @@ function possibleMinePlacing(coordI, coordJ) {
                     i: m,
                     j: n
                 });
-            }
-            //         for (var k = i - 1; k <= i + 1; k++) {
-            //             for (var l = j - 1; j <= j + 1; l++) {
-            //                 continue;
-            //     }
-            // }
-
+            
         }
     }
     return placesToPutMinesIn;
@@ -269,7 +263,7 @@ function checkGameOver(result) {
 }
 
 function expandShown(board, elCell, i, j) {
-    if (board[i][j].minesAroundCount === 0 && !board[i][j].isMine && !gClickedHint && !board[i][j].isMarked) {
+    if (!board[i][j].isMine && !gClickedHint && !board[i][j].isMarked) {
         for (var k = i - 1; k <= i + 1; k++) {
             if (k < 0 || k >= board.length) continue;
             for (var l = j - 1; l <= j + 1; l++) {
@@ -279,52 +273,25 @@ function expandShown(board, elCell, i, j) {
                     if (!board[k][l].isShown && !board[k][l].isMarked) {
                         board[k][l].isShown = true;
                         gGame.shownCount++;
-                    }
-                    if (board[k][l].isMarked) {
-                        checkGameOver('win');
-                        continue;
-                    } else {
                         if (board[k][l].minesAroundCount === 0) {
+                            expandShown(board, elCell, k, l);
                             renderCell(k, l, '');
                         } else {
                             renderCell(k, l, board[k][l].minesAroundCount)
                         }
                     }
+                    if (board[k][l].isMarked) {
+                        checkGameOver('win');
+                        continue;
+                    }
+                    
                 }
             }
         }
         checkGameOver('win');
     }
     if (gClickedHint) {
-        for (var m = i - 1; m <= i + 1; m++) {
-            if (m < 0 || m >= board.length) continue;
-            for (var n = j - 1; n <= j + 1; n++) {
-                if (n < 0 || n >= board[i].length) continue;
-                if (board[m][n].isMarked) {
-                    continue;
-                }
-                var shownCell = (board[m][n].isMine) ? '<img class="flag-mine-imgs" src="img/mine.png" alt="mine"/>' : board[m][n].minesAroundCount;
-                if (board[m][n].isMine) {
-                    renderCell(m, n, shownCell);
-                } else if (!board[m][n].isMine && shownCell > 0) {
-                    renderCell(m, n, shownCell);
-                } else {
-                    renderCell(m, n, '');
-                }
-            }
-        }
-        setTimeout(function () {
-            for (var o = 0; o < board.length; o++) {
-                for (var p = 0; p < board[o].length; p++) {
-                    if (!board[o][p].isShown) {
-                        renderCellsAfterUsingHint(o, p);
-                    }
-                }
-            }
-
-            gClickedHint = false;
-            elHintModal.style.display = 'none';
-        }, 1000)
+        expandCellsAfterUsingAHint(board, i, j);
     }
 }
 
@@ -350,7 +317,40 @@ function gameHints() {
         if (gNumOfHintsUsed === 3 && !gClickedHint) elHintModal.style.display = 'hidden';
     } 
 }
+    
+function expandCellsAfterUsingAHint(board, coordI, coordJ) {
+    for (var m = coordI - 1; m <= coordI + 1; m++) {
+        if (m < 0 || m >= board.length) continue;
+        for (var n = coordJ - 1; n <= coordJ + 1; n++) {
+            if (n < 0 || n >= board[coordI].length) continue;
+            if (board[m][n].isMarked) {
+                continue;
+            }
+            var shownCell = (board[m][n].isMine) ? '<img class="flag-mine-imgs" src="img/mine.png" alt="mine"/>' : board[m][n].minesAroundCount;
+            if (board[m][n].isMine) {
+                renderCell(m, n, shownCell);
+            } else if (!board[m][n].isMine && shownCell > 0) {
+                renderCell(m, n, shownCell);
+            } else {
+                renderCell(m, n, '');
+            }
 
+        }
+    }
+    setTimeout(function () {
+        for (var o = 0; o < board.length; o++) {
+            for (var p = 0; p < board[o].length; p++) {
+                if (!board[o][p].isShown) {
+                    renderCellsAfterUsingHint(o, p);
+                }
+            }
+        }
+
+        gClickedHint = false;
+        elHintModal.style.display = 'none';
+    }, 1000)
+}
+    
 function gameLivesLeft() {
     gClickedOnAMine++;
     var elHeartImgs = document.querySelector('.lives');
