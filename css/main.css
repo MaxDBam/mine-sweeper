@@ -18,6 +18,16 @@ h1 {
     margin: auto;
 }
 
+button {
+    cursor: pointer;
+}
+
+.manual-game-activated {
+    display: none;
+    text-align: center;
+    color: silver;
+}
+
 .game-features {
     margin-top: 2rem;
     text-align: center;
@@ -61,7 +71,9 @@ h1 {
 }
 
 .play-again-btn {
+    
     cursor: pointer;
+    /* text-align: center; */
     width: 26px;
 }
 
@@ -72,19 +84,30 @@ h1 {
 }
 
 td {
-    cursor: pointer;
+    /* cursor: pointer; */
     width: 25px;
     height: 25px;
+    /* visibility: hidden; */
+    /* z-index: -1; */
 }
 
 .closed-cell {
+    /* background-position: 0 30px; */
+    cursor: pointer;
     background-color: teal;
-    content: '🟦';
-   
+    /* background-image: url(https://minesweeper.online/img/skins/hd/closed.svg?v=2) no-repeat; */
+}
+
+.safe-cell {
+    cursor: pointer;
+    background-color: blueviolet;
 }
 
 .opened-cell {
     background-color: silver;
+    text-align: center;
+    /* visibility: visible; */
+    /* z-index: 1; */
 }
 
 .opened-cell:hover {
@@ -115,4 +138,21 @@ td {
     border: 1px solid black;
     border-collapse: collapse;
     text-align: left;
+}
+
+.safe-btn {
+    cursor: pointer;
+    display: block;
+    text-align: center;
+    margin: 1rem auto;
+}
+
+/* .num {
+    display: block;
+    text-align: center;
+} */
+
+.num-of-clicks {
+    text-align: center;
+    color: silver;
 }
