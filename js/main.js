@@ -32,7 +32,13 @@ var gNumOfHintsUsed;
 var gClickedHint = false;
 var gClickedOnAMine;
 var gFlagsCount;
-
+var gSafeClicksUsed;
+var gUsedASafeClick = false;
+var gNumOfSafeClicks;
+var elSafeClicks = document.querySelector('.num-of-clicks');
+var gClickedOnAManualMode = false;
+var gCountOfMines;
+var gPlayingInManualMode = false;
 
 var elHintModal = document.querySelector('.hint-modal');
 document.querySelector('.timer').innerText = gGame.secsPassed;
@@ -44,15 +50,21 @@ var gTimer;
 
 function initGame(level) {
     document.querySelector('.play-again-btn').src = 'img/happy.png';
+    gPlayingInManualMode = false;
+    gClickedOnAManualMode = false;
+    gSafeClicksUsed = 0;
     gClickedOnAMine = 0;
     gNumOfHintsUsed = 0;
     gGame.shownCount = 0;
     gGame.secsPassed = 0;
+    gNumOfSafeClicks = 3;
     document.querySelector('.lives').innerHTML = '<img src="img/heart.png" alt="heart image" class="heart-img"/><img src="img/heart.png" alt="heart image" class="heart-img"/><img src="img/heart.png" alt="heart image" class="heart-img"/>';
     document.querySelector('.hints').innerHTML = '<img src="img/hint.png" alt="hint image" class="hint-img"/><img src="img/hint.png" alt="hint image" class="hint-img"/><img src="img/hint.png" alt="hint image" class="hint-img"/>';
     document.querySelector('.timer').innerText = gGame.secsPassed;
     document.querySelector('.hints').style.width = '50px';
     document.querySelector('.hints').style.display = 'initial';
+    document.querySelector('.num-of-clicks').innerText = gNumOfSafeClicks + ' clicks available';
+    document.querySelector('.manual-game-activated').style.display = 'none';
     clearInterval(gTimer);
     gMoves = 0;
     gChosenLevel = level;
@@ -129,10 +141,14 @@ function renderBoard(board) {
 
 function cellClicked(elCell, i, j) {
     var img = document.querySelector('.play-again-btn');
-    if (img.getAttribute('src') === 'img/happy.png') {
+    if (img.getAttribute('src') === 'img/happy.png' && !gClickedOnAManualMode) {
         gGame.isOn = true;
 
-    } else return;
+    } else {
+        placeMinesManually(elCell, i, j);
+        return;
+        
+    }
 
 
     if (gBoard[i][j].isMarked || gBoard[i][j].isShown) {
@@ -140,14 +156,10 @@ function cellClicked(elCell, i, j) {
     }
 
     if (gGame.isOn) {
-        // Need to take care of this in a better way
-        if (gMoves === 0) {
+        if (gMoves === 0 && !gPlayingInManualMode) {
             gamerTimer();
             for (var k = 0; k < gChosenLevel.MINES; k++) {
                 var placeMine = possibleMinePlacing(i, j)[getRandomInt(0, possibleMinePlacing(i, j).length)];
-                // if (i === placeMine.i && j === placeMine.j) {
-                //     continue;
-                // } else
                 if (gBoard[placeMine.i][placeMine.j].isMine === true) {
                     k--;
                 } else {
@@ -157,34 +169,37 @@ function cellClicked(elCell, i, j) {
             }
             setMinesNegsCount(gBoard);
         }
-    }
-
-    gMoves++;
-
-    var shownCell = (gBoard[i][j].isMine) ? '<img class="flag-mine-imgs" src="img/mine.png" alt="mine"/>' : gBoard[i][j].minesAroundCount;
-    if (shownCell === '<img class="flag-mine-imgs" src="img/mine.png" alt="mine"/>' && !gClickedHint) {
-        mineExplosionAudio.play();
-        gBoard[i][j].isShown = true;
-        elCell.innerHTML = shownCell;
-        elCell.classList.remove('closed-cell');
-        elCell.classList.add('opened-cell');
-        // gGame.shownCount++;
-        gameLivesLeft();
-        if (gClickedOnAMine === 3) {
-            checkGameOver('lose');
+        if (gPlayingInManualMode && gMoves === 0) {
+            gamerTimer();
         }
-    } else if (shownCell > 0 && !gClickedHint) {
-        gBoard[i][j].isShown = true;
-        elCell.innerText = shownCell;
-        elCell.classList.remove('closed-cell');
-        elCell.classList.add('opened-cell');
-        gGame.shownCount++;
-        checkGameOver('win');
-    } else expandShown(gBoard, elCell, i, j);
-
-    if (gClickedHint) {
-        expandShown(gBoard, elCell, i, j);
+        gMoves++;
+    
+        var shownCell = (gBoard[i][j].isMine) ? '<img class="flag-mine-imgs" src="img/mine.png" alt="mine"/>' : gBoard[i][j].minesAroundCount;
+        if (shownCell === '<img class="flag-mine-imgs" src="img/mine.png" alt="mine"/>' && !gClickedHint) {
+            mineExplosionAudio.play();
+            gBoard[i][j].isShown = true;
+            elCell.innerHTML = shownCell;
+            elCell.classList.remove('closed-cell');
+            elCell.classList.add('opened-cell');
+            // gGame.shownCount++;
+            gameLivesLeft();
+            if (gClickedOnAMine === 3) {
+                checkGameOver('lose');
+            }
+        } else if (shownCell > 0 && !gClickedHint) {
+            gBoard[i][j].isShown = true;
+            elCell.innerText = shownCell;
+            elCell.classList.remove('closed-cell');
+            elCell.classList.add('opened-cell');
+            gGame.shownCount++;
+            checkGameOver('win');
+        } else expandShown(gBoard, elCell, i, j);
+    
+        if (gClickedHint) {
+            expandShown(gBoard, elCell, i, j);
+        }
     }
+
 }
 
 function possibleMinePlacing(coordI, coordJ) {
@@ -292,6 +307,54 @@ function expandShown(board, elCell, i, j) {
     }
     if (gClickedHint) {
         expandCellsAfterUsingAHint(board, i, j);
+    }
+}
+
+function showSafeCell() {
+    if (!gGame.isOn || gUsedASafeClick || gSafeClicksUsed >= 3) {
+        return;
+    }
+    var closedCells = [];
+    gSafeClicksUsed++;
+    if (gSafeClicksUsed > 0 && gSafeClicksUsed <= 3) {
+        gUsedASafeClick = true;
+        gNumOfSafeClicks--;
+        if (gNumOfSafeClicks !== 1) {
+            elSafeClicks.innerText = gNumOfSafeClicks + ' clicks available';
+
+        } else {
+            elSafeClicks.innerText = gNumOfSafeClicks + ' click available';
+        }
+        
+
+        for (var k = 0; k < gBoard.length; k++) {
+            for (var l = 0; l < gBoard[k].length; l++) {
+                if (!gBoard[k][l].isShown && !gBoard[k][l].isMine && !gBoard[k][l].isMarked) {
+                    closedCells.push({
+                        i: k,
+                        j: l
+                    });
+                }
+            }
+        }
+    } else {
+        return;
+    }
+
+    var randomSafeCell = closedCells[getRandomInt(0, closedCells.length)];
+    renderSafeCell(randomSafeCell.i, randomSafeCell.j, '');
+}
+
+function renderSafeCell(i, j) {
+    var elCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`);
+    if (gUsedASafeClick) {
+        elCell.classList.remove('closed-cell');
+        elCell.classList.add('safe-cell');
+        setTimeout(function () {
+            elCell.classList.remove('safe-cell');
+            elCell.classList.add('closed-cell');
+            gUsedASafeClick = false;
+        }, 1000);
     }
 }
 
@@ -449,6 +512,33 @@ function keepingBestScore() {
         document.querySelector('.expert-score').innerText = window.localStorage.getItem('PlayersNameExpert') + ' ' + window.localStorage.getItem('BestTimeExpert');
     }
 
+}
+
+function manualMode(level) {
+    initGame(level);
+    gPlayingInManualMode = true;
+    gClickedOnAManualMode = true;
+    document.querySelector('.manual-game-activated').style.display = 'block';
+
+}
+
+function placeMinesManually(elCell, i, j) {
+    if (!gClickedOnAManualMode) {
+        return;
+    }
+    if (gFlagsCount > 0) {
+        --gFlagsCount;
+        document.querySelector('.flags-counter').innerText = gFlagsCount;
+        gBoard[i][j].isMine = true;
+    } else {
+        setMinesNegsCount(gBoard);
+        gFlagsCount = gChosenLevel.MINES;
+        document.querySelector('.flags-counter').innerText = gFlagsCount;
+        gClickedOnAManualMode = false;
+        cellClicked(elCell, i, j);
+        return;
+    }
+   
 }
 
 function getRandomInt(min, max) {
